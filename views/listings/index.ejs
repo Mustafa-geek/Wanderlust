@@ -1,0 +1,45 @@
+<% layout("/layouts/boilerplate") -%>
+
+  <body>
+    <h3>All Listings</h3>
+
+    <!-- <form method="GET" action="/listings/new">  //q ki ab wo button  navbar.ejs mei aagya aur whan se bhejre
+        <button>ADD New Listing</button>
+    </form> -->
+    <!-- Using bootstrap here --> 
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">   <!-- pureee dabbe -->
+
+      <% for(let i of ans){ %>
+
+        <a href="/listings/<%= i._id %>" class="photolink">
+
+          <div class="card col listing-card">      <!-- ek ek card -->
+            <img src="<%= i.image %>" class="card-img-top" alt="A photo of hotel" style="height: 20rem">
+            <div class="card-img-overlay">overlay effect</div>
+
+            <div class="card-body">
+              <p class="card-text">
+                <b><%= i.title %></b> <br>
+                Price -&#8377;<%= i.price.toLocaleString("en-IN")%> / Night
+              </p>
+            </div>
+          </div>
+        </a>
+      <% } %>
+    </div>
+
+
+
+    
+ <!-- <ul>
+  <% for(let i of ans){ %>
+    <li><a href="/listings/<%= i._id %>">
+            <%= i.title %>
+        </a></li>
+
+    <% } %>
+  </ul> -->
+
+
+
+  </body>

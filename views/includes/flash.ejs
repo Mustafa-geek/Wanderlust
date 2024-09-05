@@ -1,0 +1,18 @@
+<% if (messagaan && messagaan.length>0) { %>    
+    <div class="alert alert-success alert-dismissible fade show col-6 offset-3" role="alert">
+        <%= messagaan %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+ 
+<% } %>
+<!-- agar messagaan exist karti toh ich kaam karna if cond -->
+ <!-- lekin messagaan mei kch bhi nhi raha toh bhi ek empty array return karta isliye wo .len>0 cond lagaaye -->
+
+
+ <% if (failures && failures.length > 0) { %>
+    <div class="alert alert-danger alert-dismissable fade show col-6 offset-3" role="alert"  >
+        <%= failures %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  
+ <% } %>

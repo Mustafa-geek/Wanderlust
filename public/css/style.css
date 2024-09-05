@@ -1,0 +1,123 @@
+body{
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; 
+  /* ye hum isliye karre taki page puri height lena aur footer chipka huwa rehna nichche */
+}
+
+.container{ /* boilerplate.ejs ke andar hai ye...puri body ismei ich embed hori */
+ flex:1;
+}
+
+
+/* for navbar */
+.navbar{
+    height:5rem;
+}
+
+.fa-compass{
+    color:red;
+    font-size:2rem;
+}
+
+.nav-link{
+    color:black !important;
+}
+
+/* Footer */
+
+.f-info-links a {
+    text-decoration: none;
+    color: black;
+}
+
+.f-info-links a:hover{
+    text-decoration: underline;
+}
+
+.f-info{
+    text-align: center;
+    height:8rem;
+    display: flex;
+    background-color: lightgrey;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: space-evenly;
+}
+
+.f-socials,.f-info-links,.f-brand{
+    width:100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+   
+}
+
+.f-socials i{  /* har icon ke bazuk jagah dena */
+    margin-right: 1rem;
+    font-size: 1.3rem;
+}
+
+/* Cards */
+
+
+.listing-card{
+    border: none !important;
+    margin-bottom: 2rem;
+}
+
+.card-img-top{
+    border-radius: 1rem !important;
+    width: 100% !important;
+    object-fit: cover !important;
+}
+
+.card-body{
+    padding:0px !important;
+}
+
+.card-text{
+    color:black !important;
+}
+
+.photolink{
+    text-decoration: none;
+}
+
+/* Hover Effects */
+
+.card-img-overlay{
+    opacity:0;
+}
+
+.card-img-overlay:hover{
+    opacity:0.15;
+    background-color: white;
+}
+
+/* New listing */
+
+.submit-btn{
+    background-color: red !important;
+    border: none !important;
+}
+
+/* Edit Listing */
+.edit-btn{
+    background-color: red !important;
+    border: none !important;
+}
+
+/* Show Listing */
+.show-photo{
+    height: 50vh !important;
+}
+
+.btns{
+    display:flex;
+}
+
+.btn-dark{
+    width: 100px;
+}
