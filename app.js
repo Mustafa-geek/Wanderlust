@@ -7,9 +7,13 @@ const ejsMate = require("ejs-mate")
 const ExpressError = require("./utils/ExpressError.js")
 const session = require("express-session")
 const flash = require("connect-flash")
+const passport = require("passport")
+const LocalStrategy = require("passport-local")
+const User = require("./models/user.js");
 
 const Listings = require("./routes/listing.js"); //all listings are kept
 const Reviews = require("./routes/review.js") //all reviews are kept
+const user = require("./routes/user.js") // authenticate karne
 
 main().then(()=>{
     console.log("DB is connected")
@@ -28,9 +32,18 @@ const sessions = {
 }
 app.use(session(sessions))
 app.use(flash())
+
+
+app.use(passport.initialize())
+app.use(passport.session())
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+
 app.use((req,res,next)=>{        //using the middleware for flash
-    res.locals.messagaan = req.flash("message"); //message is used as key  in listing/review.js and messagan is transmitted to boilerplate...flash.ejs
-    res.locals.failures = req.flash("failure");  //same
+    res.locals.messagaan = req.flash("message"); //message is used as key  in routes/review.js and messagan is transmitted to boilerplate...flash.ejs
+    res.locals.failures = req.flash("error");  //same
     next();  //routes ke paas waapis aajati phr baat
 })
 
@@ -53,10 +66,11 @@ app.listen("8080", () => {
 app.get("/",(req,res) =>{
     res.send("working")
 })
- 
 
-app.use("/listings",Listings)  //line 13
-app.use("/listings/:id/reviews",Reviews)//line 14
+
+app.use("/listings",Listings)  //line 14
+app.use("/listings/:id/reviews",Reviews)//line 15
+app.use("/",user)//line 16
 
 
 app.all("*",(req,res,next)=>{

@@ -11,5 +11,7 @@ const userSchema = new Schema({
         required:true,
     }
 })
+// passport -local-Mongoose by default  defines username,hash,salt,
 
-//by default passport defines username,hash,salt,
+userSchema.plugin(passportLocalMongoose)
+module.exports = mongoose.model('User',userSchema)

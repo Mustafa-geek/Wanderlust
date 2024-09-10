@@ -31,8 +31,8 @@
 
 
         <div class="card col-6 offset-3 mb-3 mt-3">
-            <h4><b>Leave a Review</b></h4>
-            <form action="/listings/<%= ans.id %>/reviews" method="POST"  class="needs-validation" novalidate
+            <h4><b>Leave a Review</b></h4>    <!-- ye needs validation ki logic wahan  boilerplate.ejs mei nichce dekho --public mei JS mei haio -->
+            <form action="/listings/<%= ans.id %>/reviews" method="POST"  class="needs-validation" novalidate   
                     <label for="rating" class="form-label">Rating</label>
                     <input name="review[rating]" type="range" min="1" max="5" id="rating" class="form-range" >
 

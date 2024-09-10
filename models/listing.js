@@ -48,5 +48,5 @@ listingSchema.post("findOneAndDelete", async(listing) =>{//jo listing ku tum del
 
 
 const  Listing = mongoose.model("Listing",listingSchema);
-       //model                  collection
+                                  //model    //defines format of collections created my mongodb of the model
 module.exports = Listing; // exporting to app.js

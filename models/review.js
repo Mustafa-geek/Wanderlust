@@ -19,3 +19,7 @@ const reviewSchema = new Schema({
 });
 
 module.exports = mongoose.model("Review",reviewSchema)
+
+
+//"Review": The first argument is the name of the model. In this case, it's "Review". Mongoose automatically creates a collection in MongoDB with the plural version of this name (e.g., "reviews").
+//reviewSchema: The second argument is the schema that defines the structure of documents in the collection. The reviewSchema specifies what fields the "reviews" collection will have and any rules for those fields (like types and validations).
