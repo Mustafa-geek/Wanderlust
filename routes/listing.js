@@ -4,6 +4,7 @@ const Listing = require("../models/listing.js")   //schema is defined
 const wrapAsync = require("../utils/wrapAsync.js")
 const ExpressError = require("../utils/ExpressError.js")
 const {listingSchema} = require("../schema.js")  //joi is required
+const {isLoggedIn} = require("../middleware.js")
 
 const validateListing = (req,res,next)=>{  //using joi (for error handling)
     let {error} = listingSchema.validate(req.body)
@@ -21,7 +22,8 @@ router.get("/",wrapAsync( async (req,res) =>{   //index route
 }))
   
 //put this route above listings/:id otherwise /new will be considered as :id
-router.get("/new",(req,res)=>{
+router.get("/new",isLoggedIn,(req,res)=>{
+     //
      res.render("listings/new.ejs")
 })
  
@@ -37,7 +39,7 @@ router.get("/:id",wrapAsync(async (req,res)=>{ //jo lstng pe click kare uski pur
  
  
 //Saving the filled form as a listing in the db 
-router.post("/",validateListing , wrapAsync(async (req,res,next)=>{
+router.post("/",validateListing ,isLoggedIn, wrapAsync(async (req,res,next)=>{
      //let{title,description,image,place,}=req.body
      //let ans = req.body.listing
  
@@ -53,14 +55,15 @@ router.post("/",validateListing , wrapAsync(async (req,res,next)=>{
  
 
 //EDIT Route
-router.get("/:id/edit",wrapAsync( async (req,res) =>{
+router.get("/:id/edit",isLoggedIn,wrapAsync( async (req,res) =>{
      let {id} = req.params;
      const ans = await Listing.findById(id)
      res.render("listings/edit.ejs",{ans})
 }))
  
+
 //after clking edit btn, changes are made
-router.put("/:id" ,validateListing , wrapAsync(async(req,res) =>{
+router.put("/:id" ,validateListing, isLoggedIn, wrapAsync(async(req,res) =>{
      
      // if(!req.body.listing){        //agar listing ka data send kare so sahi nhi kare toh apan defined custom err send karre
      //     throw new ExpressError(400,"Send Valid Data For listing")
@@ -74,7 +77,7 @@ router.put("/:id" ,validateListing , wrapAsync(async(req,res) =>{
 }))
  
 //Delte ROute
-router.delete("/:id",wrapAsync( async(req,res)=>{ //triggers middleware in listing.js
+router.delete("/:id",isLoggedIn,wrapAsync( async(req,res)=>{ //triggers middleware in listing.js
      let {id} = req.params;
      let ans = await Listing.findByIdAndDelete(id);
      console.log(ans) //deleted listing

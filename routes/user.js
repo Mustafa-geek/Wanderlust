@@ -14,10 +14,16 @@ router.post("/signup",wrapAsync(async (req,res)=>{
     try{
         let{username,email,password} = req.body;
         const newUser = new User({email,username})  //Creating instance of User model. Note that the password is not stored directly here. Only email and username are being passed to create the user object. This is because passport-local-mongoose will handle password hashing and storing
-        const save = await User.register(newUser,password)
+        const save = await User.register(newUser,password) //saving in db  the user info
         console.log(save)
-        req.flash("message","Welcome to Wanderlust");   //see flash middleware in app.js that "message is transmitted there"
-        res.redirect("/listings")
+
+        req.login(save,(err)=>{     //once you have signuped there is no need to login
+            if(err){
+                return next(err)
+            }
+            req.flash("message","You are Logged In")
+            res.redirect("/listings")
+        })
     }
     catch(e){
         req.flash("error",e.message)
@@ -38,8 +44,20 @@ router.post("/login",
         failureFlash:true,
 }),
 async(req,res)=>{
-    req.flash("message","login Sucessful")
+    req.flash("message","Login Successful")
    res.redirect("/listings")
 })
+
+
+router.get("/logout",(req,res)=>{
+ req.logout((err)=>{     //using the logout method for logging out of the website
+    if(err){
+        return next(err)
+    }
+    req.flash("message","You are Logged Out")
+    res.redirect("/listings")
+ })
+})
+
 
 module.exports = router

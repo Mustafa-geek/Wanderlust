@@ -44,6 +44,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{        //using the middleware for flash
     res.locals.messagaan = req.flash("message"); //message is used as key  in routes/review.js and messagan is transmitted to boilerplate...flash.ejs
     res.locals.failures = req.flash("error");  //same
+    res.locals.currUser = req.user //used in includes/navbar.ejs ...NOTE:no key is used
     next();  //routes ke paas waapis aajati phr baat
 })
 
