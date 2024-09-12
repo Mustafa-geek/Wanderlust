@@ -10,23 +10,26 @@
             <div class="listing-card col-6 offset-3" style="width: 28rem;">
                 <img src="<%= ans.image %>" class="card-img-top show-photo" alt="An IMAGE IS HERE">
                 <div class="card-body">
-                    <p class="card-text">
-                        <%= ans.description %> <br>
-                        <%= ans.price%> <br>
-                        <%= ans.location %> <br>
-                        <%= ans.country%>
-                    </p>
+                    <p class="card-text"><i>Owned By <%= ans.owner.username %></i></p>
+                    
+                        <p class="card-text"><%= ans.description %></p>
+                        <p class="card-text"><%= ans.price%> </p>
+                        <p class="card-text"><%= ans.country%></p>
                 </div>
             </div>
 
+            <!-- buttons below the card -->
+          <%if(currUser && currUser._id.equals(ans.owner._id)) {%> <!-- agar jo ab loggedin user hai unhe aur jo actual mei create kara tha listing (owner) ...unhe same rahatoh ich edit,delte option show karna -->
           <div class="btns mb-3">    
             <a 
             href="/listings/<%= ans.id %>/edit" 
-            class="btn btn-dark offset-3 submit-btn">Edit</a>
+            class="btn btn-dark offset-3 submit-btn">Edit Listing</a>
 
             <form method="POST" action="/listings/<%= ans.id %>?_method=DELETE">
                 <button class="btn btn-dark offset-5">Delete Listing</button>
             </form> 
+            </div>
+                <% } %>
         </div>
 
 

@@ -3,19 +3,7 @@ const router = express.Router({ mergeParams: true }); //mergeparams ki wajah se 
 const Listing = require("../models/listing.js")   //schema is defined
 const Review = require("../models/review.js")   //schema is defined
 const wrapAsync = require("../utils/wrapAsync.js")
-const ExpressError = require("../utils/ExpressError.js")
-const {reviewSchema} = require("../schema.js")  //joi is required
-
-
-const validatereview = (req,res,next)=>{  //using joi (for error handling)
-    let {error} = reviewSchema.validate(req.body)
-    if(error){
-     throw new ExpressError(400,error)
-    }
-    else{
-        next();
-    }
-}
+const {validatereview} = require("../middleware.js")
 
 
 

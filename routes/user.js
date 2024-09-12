@@ -3,7 +3,8 @@ const express = require("express")
 const router = express.Router(); 
 const User = require("../models/user.js");
 const wrapAsync = require("../utils/wrapAsync.js");
-const passport = require("passport")
+const passport = require("passport");
+const { saveRedirectUrl } = require("../middleware.js");
 
 //signup matlab naya acc banana
 router.get("/signup", (req,res)=>{
@@ -17,7 +18,7 @@ router.post("/signup",wrapAsync(async (req,res)=>{
         const save = await User.register(newUser,password) //saving in db  the user info
         console.log(save)
 
-        req.login(save,(err)=>{     //once you have signuped there is no need to login
+        req.login(save,(err)=>{     //once you have signuped there is no need to login so thsi req.login fills the req.user array
             if(err){
                 return next(err)
             }
@@ -39,13 +40,15 @@ router.get("/login",(req,res)=>{
 })
 
 router.post("/login",
+    saveRedirectUrl,            //passing middleware from middleware.js
      passport.authenticate("local" , {   //passing it as a middleware
         failureRedirect:"/login",
         failureFlash:true,
 }),
 async(req,res)=>{
     req.flash("message","Login Successful")
-   res.redirect("/listings")
+    let redirect = res.locals.redirectUrl || "/listings"   //agar redirectUrl empty hai toh /listings pe jao
+   res.redirect(redirect)                  //this redirectUrl returns empty when we are tryg to login from home page                          
 })
 
 

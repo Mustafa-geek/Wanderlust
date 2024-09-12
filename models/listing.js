@@ -31,6 +31,11 @@ const Review = require("./review.js")
        },
    ],
 
+   owner :{
+       type:Schema.Types.ObjectId,
+       ref:"User"  //User model from user.js
+   }
+
 
 })
 

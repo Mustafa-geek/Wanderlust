@@ -2,19 +2,10 @@ const express = require("express")
 const router = express.Router();
 const Listing = require("../models/listing.js")   //schema is defined
 const wrapAsync = require("../utils/wrapAsync.js")
-const ExpressError = require("../utils/ExpressError.js")
-const {listingSchema} = require("../schema.js")  //joi is required
-const {isLoggedIn} = require("../middleware.js")
+const {isLoggedIn ,isOwner,validateListing} = require("../middleware.js")
 
-const validateListing = (req,res,next)=>{  //using joi (for error handling)
-    let {error} = listingSchema.validate(req.body)
-    if(error){
-     throw new ExpressError(400,error)
-    }
-    else{
-        next();
-    }
-}
+
+
 
 router.get("/",wrapAsync( async (req,res) =>{   //index route
     let ans = await Listing.find({})
@@ -29,12 +20,13 @@ router.get("/new",isLoggedIn,(req,res)=>{
  
 router.get("/:id",wrapAsync(async (req,res)=>{ //jo lstng pe click kare uski puri info dena id pakadke (show route)
      let {id} = req.params;
-     let ans = await Listing.findById(id).populate("review");
+     let ans = await Listing.findById(id).populate("review").populate("owner");  //showing all info of the properties of the listing
      if(!ans){   //agar jo listing dhondhre wo nhi exist karti
       req.flash("failure","Listing you requested for does not exist")
       res.redirect("/listings")
      }
      res.render("listings/show.ejs",{ans})
+     // console.log(ans)
 }))
  
  
@@ -48,6 +40,7 @@ router.post("/",validateListing ,isLoggedIn, wrapAsync(async (req,res,next)=>{
      // }
  
      const ans = new Listing(req.body.listing) //creating an instance
+     ans.owner = req.user._id; //jo new listing ka owner unhe banta jo currently logged in hai toh uski id ghusaare ismei
      await ans.save()
      req.flash("message","New Listing is  Created!!");
      res.redirect("/listings")
@@ -55,7 +48,7 @@ router.post("/",validateListing ,isLoggedIn, wrapAsync(async (req,res,next)=>{
  
 
 //EDIT Route
-router.get("/:id/edit",isLoggedIn,wrapAsync( async (req,res) =>{
+router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync( async (req,res) =>{
      let {id} = req.params;
      const ans = await Listing.findById(id)
      res.render("listings/edit.ejs",{ans})
@@ -63,13 +56,11 @@ router.get("/:id/edit",isLoggedIn,wrapAsync( async (req,res) =>{
  
 
 //after clking edit btn, changes are made
-router.put("/:id" ,validateListing, isLoggedIn, wrapAsync(async(req,res) =>{
+router.put("/:id" ,validateListing,isOwner, isLoggedIn, wrapAsync(async(req,res) =>{
      
      // if(!req.body.listing){        //agar listing ka data send kare so sahi nhi kare toh apan defined custom err send karre
      //     throw new ExpressError(400,"Send Valid Data For listing")
-     // }
- 
-     let {id} = req.params;
+     // }   
      await Listing.findByIdAndUpdate(id,{...req.body.listing})  //jo bhi nayi req.body aayi na usku wo id waale cheez se update kardo
      // console.log(req.body.listing)
      req.flash("message","Your Listing has been Edited!!");
@@ -77,7 +68,7 @@ router.put("/:id" ,validateListing, isLoggedIn, wrapAsync(async(req,res) =>{
 }))
  
 //Delte ROute
-router.delete("/:id",isLoggedIn,wrapAsync( async(req,res)=>{ //triggers middleware in listing.js
+router.delete("/:id",isLoggedIn,isOwner,wrapAsync( async(req,res)=>{ //triggers middleware in listing.js
      let {id} = req.params;
      let ans = await Listing.findByIdAndDelete(id);
      console.log(ans) //deleted listing
