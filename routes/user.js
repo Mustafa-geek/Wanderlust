@@ -6,38 +6,16 @@ const wrapAsync = require("../utils/wrapAsync.js");
 const passport = require("passport");
 const { saveRedirectUrl } = require("../middleware.js");
 
+const userController = require("../controllers/user.js")
+
 //signup matlab naya acc banana
-router.get("/signup", (req,res)=>{
-    res.render("users/signup.ejs")
-})
+router.get("/signup",userController.renderSignupForm)
 
-router.post("/signup",wrapAsync(async (req,res)=>{
-    try{
-        let{username,email,password} = req.body;
-        const newUser = new User({email,username})  //Creating instance of User model. Note that the password is not stored directly here. Only email and username are being passed to create the user object. This is because passport-local-mongoose will handle password hashing and storing
-        const save = await User.register(newUser,password) //saving in db  the user info
-        console.log(save)
+router.post("/signup",wrapAsync(userController.signup))
 
-        req.login(save,(err)=>{     //once you have signuped there is no need to login so thsi req.login fills the req.user array
-            if(err){
-                return next(err)
-            }
-            req.flash("message","You are Logged In")
-            res.redirect("/listings")
-        })
-    }
-    catch(e){
-        req.flash("error",e.message)
-        console.log(e.message)
-        res.redirect("/signup");
-    }
-}))
 
 //ROutes for login page
-
-router.get("/login",(req,res)=>{
-    res.render("users/login.ejs")
-})
+router.get("/login",userController.renderLoginForm)
 
 router.post("/login",
     saveRedirectUrl,            //passing middleware from middleware.js
@@ -45,22 +23,11 @@ router.post("/login",
         failureRedirect:"/login",
         failureFlash:true,
 }),
-async(req,res)=>{
-    req.flash("message","Login Successful")
-    let redirect = res.locals.redirectUrl || "/listings"   //agar redirectUrl empty hai toh /listings pe jao
-   res.redirect(redirect)                  //this redirectUrl returns empty when we are tryg to login from home page                          
-})
+userController.login)
 
 
-router.get("/logout",(req,res)=>{
- req.logout((err)=>{     //using the logout method for logging out of the website
-    if(err){
-        return next(err)
-    }
-    req.flash("message","You are Logged Out")
-    res.redirect("/listings")
- })
-})
+//logout user
+router.get("/logout",userController.logout)
 
 
 module.exports = router

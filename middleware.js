@@ -2,6 +2,7 @@ const Listing = require("./models/listing.js")   //schema is defined
 const ExpressError = require("./utils/ExpressError.js")
 const { listingSchema } = require("./schema.js")  //joi is required
 const {reviewSchema} = require("./schema.js")  //joi is required
+const Review = require("./models/review.js")   //schema is defined
 
 
 module.exports.isLoggedIn = (req, res, next) => {
@@ -55,4 +56,17 @@ module.exports.validatereview = (req,res,next)=>{  //using joi (for error handli
     else{
         next();
     }
+}
+
+
+
+module.exports.isreviewAuthor = async (req, res, next) => {   //error handling if someone manipulates edit,delte from hopscoth for reviews
+    let {id,reviewId} = req.params;
+    let review = await Review.findById(reviewId) //pehle id nikal lere
+    if (!review.author.equals(res.locals.currUser._id)) { 
+         req.flash("error", "You are not the owner of this Review")
+         return res.redirect(`/listings/${id}`)
+   }
+   
+   next()
 }
