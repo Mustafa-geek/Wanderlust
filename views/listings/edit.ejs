@@ -5,7 +5,7 @@
             <div class="col-8 offset-2">
                  <!-- <br><br> -->
                 <h3>Edit Your Listing</h3>
-                <form method="POST" action="/listings/<%= ans.id %>?_method=PUT" novalidate class="needs-validation">
+                <form method="POST" action="/listings/<%= ans.id %>?_method=PUT" novalidate class="needs-validation" enctype="multipart/form-data">
                     <!-- define name as per schema of the db -->
                     <!-- these are  the actual values of db before editing which we will be editing -->
 
@@ -20,11 +20,14 @@
                         <textarea name="listing[description]" class="form-control" required><%= ans.description%></textarea>
                         <div class="invalid-feedback">Please enter a short description</div>
                     </div>
+                     <p>Original Listing Image</p>
+                    <div class="mb-3">
+                  <img src="<%= blur %>" class="imgsize">
+                    </div>
 
                     <div class="mb-3">
-                        <label for="image" class="form-label">Image Link</label>
-                        <input name="listing[image]" value="<%=ans.image%>" type="text" class="form-control" required>
-                        <div class="invalid-feedback">Please enter a valid link</div>
+                        <label for="image" class="form-label">Image File</label>
+                        <input name="listing[image]" type="file" class="form-control">
                     </div>
 
                     <div class="row"> <!-- we are doing this so that bazuk bazuk aana aur chote rahe waqt alag aana -->

@@ -10,7 +10,7 @@
 
             <!-- Bootstrap Card -->
             <div class="listing-card col-6 offset-3" style="width: 28rem;">
-                <img src="<%= ans.image %>" class="card-img-top show-photo" alt="An IMAGE IS HERE">
+                <img src="<%= ans.image.url %>" class="card-img-top show-photo" alt="An IMAGE IS HERE">
                 <div class="card-body">
                     <p class="card-text"><i>Owned By <%= ans.owner.username %></i></p> <p class="card-text">
                         <%= ans.description %>
@@ -43,9 +43,24 @@
             <% if (currUser) { %> <!-- logged in rehna review ku add krne -->
                 <h4><b>Leave a Review</b></h4>
                 <!-- ye needs validation ki logic wahan  boilerplate.ejs mei nichce dekho --public mei JS mei haio -->
-                <form action="/listings/<%= ans.id %>/reviews" method="POST" class="needs-validation" novalidate <label
-                    for="rating" class="form-label">Rating</label>
-                    <input name="review[rating]" type="range" min="1" max="5" id="rating" class="form-range">
+                <form action="/listings/<%= ans.id %>/reviews" method="POST" class="needs-validation" novalidate >
+
+                    <div class="mb-3 mt-3">
+                    <label for="rating" class="form-label">Rating</label>
+                    <fieldset class="starability-slot">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="1" checked aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                      </fieldset>
+                      </div>
 
                     <div class="mb-3 mt-3">
                         <label for="comment" class="form-label">Comment</label>
@@ -61,19 +76,17 @@
         </div>
 
 
-        <div class=" col-6 offset-3  mb-3">
+        <div class=" card-review col-6 offset-3  mb-3">
             <h4><b>All Reviews </b></h4>
             <% for(i of ans.review ) { %>
                 <!-- this review from the schema of listing (listing.js)  (here ans means listing)-->
                 <div class="card col-6  mb-2">
                     <div class="card-body">
-                        <h6 class="card-title">The author of Review is <%= i.author.username %></h6>
-                        <p class="card-text">
-                            <%= i.comment %>
+                        <h6 class="card-title">@<%= i.author.username %></h6>
                         </p> <!-- this comment and rating above used -->
-                        <p class="card-text">
-                            <%= i.rating %> Stars
-                        </p>
+                        <p class="starability-result card-text" data-rating=<%= i.rating %>></p>
+                          <p class="card-text"></p>
+                            <%= i.comment %>
                         <form class="mb-1" method="POST"
                             action="/listings/<%= ans.id %>/reviews/<%= i.id %>?_method=DELETE">
                             <button class="btn btn-dark">Delete</button>

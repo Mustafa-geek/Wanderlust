@@ -61,6 +61,11 @@ body{
 
 /* Cards */
 
+.card-review{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-between;
+}
 
 .listing-card{
     border: none !important;
@@ -120,4 +125,10 @@ body{
 
 .btn-dark{
     width: 100px;
+}
+
+
+.imgsize{
+    height: 150px;
+    width: 200px;
 }

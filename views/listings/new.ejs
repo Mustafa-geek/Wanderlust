@@ -4,9 +4,11 @@
     <div class="col-8 offset-2">
 
     <h4>Fill Info For The New Listing</h4>
-    
-    <form  method = "POST" action="/listings" class="needs-validation" novalidate> <!--novalidate means non validating browsers things nd implements botstrap for validators  -->
-        <!-- define name as per schema of the db -->
+
+    <form  method = "POST" action="/listings" class="needs-validation" 
+    novalidate                       
+    enctype="multipart/form-data"> <!--novalidate means non validating browsers things nd implements botstrap for validators  -->
+        <!-- define name as per schema of the db -->       <!-- enctype is ussed for link to image  -->
 
       <div class="mb-3">    
          <label for="title" class="form-label">Title</label>    
@@ -22,8 +24,8 @@
        </div>
 
        <div class="mb-3">
-           <label for="image" class="form-label">Image Link</label> 
-           <input name="listing[image]" placeholder="enter image URL/Liik" type="text" class="form-control">
+           <label for="image" class="form-label">Upload Image</label> 
+           <input name="listing[image]" type="file" class="form-control" required>
        </div>
 
     <div class="row">  <!-- we are doing this so that bazuk bazuk aana aur chote rahe waqt alag aana -->

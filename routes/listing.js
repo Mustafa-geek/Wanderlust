@@ -1,40 +1,52 @@
-const express = require("express")
+const express = require("express");
 const router = express.Router();
-const Listing = require("../models/listing.js")   //schema is defined
-const wrapAsync = require("../utils/wrapAsync.js")
-const {isLoggedIn ,isOwner,validateListing} = require("../middleware.js")
+const Listing = require("../models/listing.js"); //schema is defined
+const wrapAsync = require("../utils/wrapAsync.js");
+const { isLoggedIn, isOwner, validateListing } = require("../middleware.js");
+const listingController = require("../controllers/listings.js");  //core backend logic is defined
+const multer  = require('multer') //for image parsing
+const {storage} = require("../cloudConfig.js")
+const upload = multer({storage})  //storing in cloud
 
-const listingConrtroller = require("../controllers/listings.js")
+router
+  .route("/")
+  .get(wrapAsync(listingController.index)) //Index route
+  .post(                                   //Create route //Saving the filled form as a listing in the db
+    isLoggedIn,
+    upload.single('listing[image]'),  //uploading image
+    validateListing,
+    wrapAsync(listingController.createListing)
+  ); 
 
-//Index route
-router.get("/",wrapAsync(listingConrtroller.index))
   
 //New route
 //put this route above listings/:id otherwise /new will be considered as :id
-router.get("/new",isLoggedIn,listingConrtroller.renderNewForm)
+router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 
- //Show route
-router.get("/:id",wrapAsync(listingConrtroller.showListing))
- 
-
- //Create route
-//Saving the filled form as a listing in the db 
-router.post("/",validateListing ,isLoggedIn, wrapAsync(listingConrtroller.createListing));
- 
+router
+  .route("/:id")
+  .get(wrapAsync(listingController.showListing)) //Show route
+  .put(
+    isLoggedIn,
+    isOwner,
+    upload.single('listing[image]'),  //uploading image
+    validateListing, //Update route  //after clking edit btn, changes are made
+    isOwner,
+    wrapAsync(listingController.updateListing)
+  )
+  .delete(          //Delete route
+    isLoggedIn,
+    isOwner,
+    wrapAsync(listingController.destroyListing)
+  );
 
 //EDIT route
-router.get("/:id/edit",isLoggedIn,isOwner,wrapAsync(listingConrtroller.renderEditForm))
- 
+router.get(
+  "/:id/edit",
+  isLoggedIn,
+  isOwner,
+  wrapAsync(listingController.renderEditForm)
+);
 
-//Update route
-//after clking edit btn, changes are made
-router.put("/:id" ,validateListing,isOwner, isLoggedIn, wrapAsync(listingConrtroller.updateListing))
- 
-
-//Delete route
-router.delete("/:id",isLoggedIn,isOwner,wrapAsync(listingConrtroller.destroyListing));
- 
- 
-
-module.exports = router
+module.exports = router;

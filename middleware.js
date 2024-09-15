@@ -5,6 +5,28 @@ const {reviewSchema} = require("./schema.js")  //joi is required
 const Review = require("./models/review.js")   //schema is defined
 
 
+module.exports.validateListing = (req,res,next)=>{  //using joi (for error handling)
+    let {error} = listingSchema.validate(req.body)
+    if(error){
+     throw new ExpressError(400,error)
+    }
+    else{
+        next();
+    }
+}
+
+
+module.exports.validatereview = (req,res,next)=>{  //using joi (for error handling)
+    let {error} = reviewSchema.validate(req.body)
+    if(error){
+     throw new ExpressError(400,error)
+    }
+    else{
+        next();
+    }
+}
+
+
 module.exports.isLoggedIn = (req, res, next) => {
     if(!req.isAuthenticated()){    //agar user logged in nhi hai toh
         // console.log(req.user)
@@ -28,36 +50,13 @@ module.exports.saveRedirectUrl =(req,res,next)=>{
 module.exports.isOwner = async (req, res, next) => {   //error handling if someone manipulates edit req from hopscoth
      let { id } = req.params;
      let listing = await Listing.findById(id) //pehle id nikal lere
-     if ( !currUser && !listing.owner.equals(res.locals.currUser._id)) { 
+     if (!listing.owner.equals(res.locals.currUser._id)) { 
           req.flash("error", "You are not the owner of this Listing")
           return res.redirect(`/listings/${id}`)
     }
     
     next()
 }
-
-
-module.exports.validateListing = (req,res,next)=>{  //using joi (for error handling)
-    let {error} = listingSchema.validate(req.body)
-    if(error){
-     throw new ExpressError(400,error)
-    }
-    else{
-        next();
-    }
-}
-
-
-module.exports.validatereview = (req,res,next)=>{  //using joi (for error handling)
-    let {error} = reviewSchema.validate(req.body)
-    if(error){
-     throw new ExpressError(400,error)
-    }
-    else{
-        next();
-    }
-}
-
 
 
 module.exports.isreviewAuthor = async (req, res, next) => {   //error handling if someone manipulates edit,delte from hopscoth for reviews
