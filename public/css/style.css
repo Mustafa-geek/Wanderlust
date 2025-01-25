@@ -132,3 +132,9 @@ body{
     height: 150px;
     width: 200px;
 }
+
+/* maps */
+#map{
+    height:400px;
+    width:80vh;
+}

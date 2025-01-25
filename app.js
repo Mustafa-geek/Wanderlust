@@ -9,6 +9,7 @@ const methodOverride = require("method-override")
 const ejsMate = require("ejs-mate")
 const ExpressError = require("./utils/ExpressError.js")
 const session = require("express-session")
+const MongoStore = require('connect-mongo');
 const flash = require("connect-flash")
 const passport = require("passport")
 const LocalStrategy = require("passport-local")
@@ -18,13 +19,27 @@ const Listings = require("./routes/listing.js"); //all listings are kept
 const Reviews = require("./routes/review.js") //all reviews are kept
 const user = require("./routes/user.js") // authenticate karne
 
+const dbURL = process.env.ATLASDB_URL
+
 main().then(()=>{
     console.log("DB is connected")
 })
 .catch(err => console.log(err));
 
+const store = MongoStore.create({
+    mongoUrl:dbURL,
+    crypto:{
+        secret:process.env.SECRET
+    },
+    touchAfter: 24*3600,
+});
+
+store.on("error",()=>{
+    console.log("Error in MONGO SessionStore")
+})
 const sessions = { 
-    secret: "secret code",    //session using as a middleware
+    store,  //see func up
+    secret: process.env.SECRET,    //session using as a middleware
      resave: false,
     saveUninitialized: true,
     cookie: {
@@ -53,7 +68,8 @@ app.use((req,res,next)=>{        //using the middleware for flash
 
 
 async function main() {
-  await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+//   await mongoose.connect('mongodb://127.0.0.1:27017/wanderlust');
+     await mongoose.connect(dbURL)
 }
 
 app.set("view engine","ejs")
@@ -68,14 +84,11 @@ app.listen("8080", () => {
     console.log("http://localhost:8080/listings");
 })
 
-app.get("/",(req,res) =>{
-    res.send("working")
-})
 
 
-app.use("/listings",Listings)  //line 14
-app.use("/listings/:id/reviews",Reviews)//line 15
-app.use("/",user)//line 16
+app.use("/listings",Listings)  //line 17
+app.use("/listings/:id/reviews",Reviews)//line 18
+app.use("/",user)//line 19
 
 
 app.all("*",(req,res,next)=>{

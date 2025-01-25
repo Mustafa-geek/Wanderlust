@@ -1,5 +1,8 @@
 const Listing = require("../models/listing.js")   //schema is defined
 
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');  //mapbox services
+const mapToken = process.env.MAP_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapToken});
 
 
 module.exports.index = async (req,res) =>{   //index route
@@ -31,6 +34,13 @@ module.exports.showListing = async (req,res)=>{ //jo lstng pe click kare uski pu
 
 
 module.exports.createListing = async (req,res,next)=>{
+    let response = await geocodingClient.forwardGeocode({
+        query: req.body.listing.location,
+        limit: 1,
+      })
+      .send();
+
+      
     //let{title,description,image,place,}=req.body
     //let ans = req.body.listing
 
@@ -44,6 +54,8 @@ module.exports.createListing = async (req,res,next)=>{
     const ans = new Listing(req.body.listing) //creating an instance
     ans.owner = req.user._id; //jo new listing ka owner unhe banta jo currently logged in hai toh uski id ghusaare ismei
     ans.image = {url,filename}// jo new listing banare usmei image ke scchema ke cheeza ghusaare
+    ans.geometry = response.body.features[0].geometry;   //returns the co-ordinates of the location given by the user
+    
     await ans.save()
     req.flash("message","New Listing is  Created!!");
     res.redirect("/listings")

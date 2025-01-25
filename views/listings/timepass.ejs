@@ -141,3 +141,14 @@ app.delete("/listings/:id/reviews/:reviewId", wrapAsync(async(req,res)=>{
     //     res.send("working this")
     
     // })
+
+
+
+    geocodingClient.forwardGeocode({
+     query: 'Paris, France',
+     limit: 2
+   })
+     .send()
+     .then(response => {
+       const match = response.body;
+     });

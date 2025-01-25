@@ -1,37 +1,93 @@
 <% layout("/layouts/boilerplate") -%>
-
-  <body>
-    <h3>All Listings</h3>
-
-    <!-- <form method="GET" action="/listings/new">  //q ki ab wo button  navbar.ejs mei aagya aur whan se bhejre
+<style>
+  #filters{
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .filter{
+    text-align: center;
+    margin-right: 4.6rem;
+    margin-top: 2rem;
+    opacity: 0.7;
+  }
+  .filter:hover{
+    opacity: 1;
+    cursor: pointer;
+  }
+  .filter p {
+    font-size: 0.rem;
+  }
+</style>
+<div id="filters">
+  <div class="filter">
+    <div><i class="fa-solid fa-fire"></i></div>
+    <p>Trending</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-bed"></i></div>
+    <p>Rooms</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-mountain-city"></i></div>
+    <p>Iconic Cities</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-mountain"></i></div>
+    <p>Mountains</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-fort-awesome"></i></div>
+    <p>Castles</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-person-swimming"></i></div>
+    <p>Amazing Pools</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-campground"></i></div>
+    <p>Camping</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-cow"></i></div>
+    <p>Farms</p>
+  </div>
+  <div class="filter">
+    <div><i class="fa-solid fa-snowflake"></i></div>
+    <p>Arctic</p>
+  </div>
+</div>
+<!-- <form method="GET" action="/listings/new">  //q ki ab wo button  navbar.ejs mei aagya aur whan se bhejre
         <button>ADD New Listing</button>
     </form> -->
-    <!-- Using bootstrap here --> 
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">   <!-- pureee dabbe -->
+<!-- Using bootstrap here -->
+<div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+  <!-- pureee dabbe -->
 
-      <% for(let i of ans){ %>
+  <% for(let i of ans){ %>
 
-        <a href="/listings/<%= i._id %>" class="photolink">
+  <a href="/listings/<%= i._id %>" class="photolink">
+    <div class="card col listing-card">
+      <!-- ek ek card -->
+      <img
+        src="<%= i.image.url %>"
+        class="card-img-top"
+        alt="A photo of hotel"
+        style="height: 20rem"
+      />
+      <div class="card-img-overlay">overlay effect</div>
 
-          <div class="card col listing-card">      <!-- ek ek card -->
-            <img src="<%= i.image.url %>" class="card-img-top" alt="A photo of hotel" style="height: 20rem">
-            <div class="card-img-overlay">overlay effect</div>
-
-            <div class="card-body">
-              <p class="card-text">
-                <b><%= i.title %></b> <br>
-                Price -&#8377;<%= i.price.toLocaleString("en-IN")%> / Night
-              </p>
-            </div>
-          </div>
-        </a>
-      <% } %>
+      <div class="card-body">
+        <p class="card-text">
+          <b><%= i.title %></b> <br />
+          Price -&#8377;<%= i.price.toLocaleString("en-IN")%> / Night
+        </p>
+      </div>
     </div>
+  </a>
+  <% } %>
+</div>
 
-
-
-    
- <!-- <ul>
+<!-- <ul>
   <% for(let i of ans){ %>
     <li><a href="/listings/<%= i._id %>">
             <%= i.title %>
@@ -39,7 +95,3 @@
 
     <% } %>
   </ul> -->
-
-
-
-  </body>

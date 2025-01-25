@@ -1,6 +1,9 @@
 <% layout("/layouts/boilerplate") %>
 
-    <body>
+        <script>
+            const mapToken = "<%= process.env.MAP_TOKEN %>"  //jo listing mei map appear hora na wo yahi se wahan jara
+            const ans = <%- JSON.stringify(ans)%>; //jab listing create hoti uske pure cheeza send karre map.js ku in public
+        </script>
         <div class="row mt-4">
             <div class="col-5 offset-3"> <!-- 5 ki utti jagah leta 3 ki utti jagah chodke -->
                 <h3><b>
@@ -75,8 +78,8 @@
 
         </div>
 
-
-        <div class=" card-review col-6 offset-3  mb-3">
+        <% if(ans.review.length > 0) { %>
+            <div class=" card-review col-6 offset-3  mb-3">
             <h4><b>All Reviews </b></h4>
             <% for(i of ans.review ) { %>
                 <!-- this review from the schema of listing (listing.js)  (here ans means listing)-->
@@ -93,7 +96,15 @@
                         </form>
                     </div>
                 </div>
-                <% } %>
+            <% } %>
+           </div>
+        <% } %>
+        <div class="col-6 offset-3  mb-3">
+            <h3>Where you"ll be</h3>
+            <div id="map"></div>  
+            <!-- see in map.js in public files -->
         </div>
-        </div>
-    </body>
+
+        <script src="/js/map.js"></script>
+        <!-- also see at the top of this file -->
+    
